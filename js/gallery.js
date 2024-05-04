@@ -64,22 +64,36 @@ const images = [
   },
 ];
 
+const gallery = document.querySelector(".gallery");
+
 const markup = images.reduce((html, image) => {
   return (html += `
   <li class="gallery-item">
-  <a class="gallery-link" href="${image.original}">
     <img
       class="gallery-image"
       src="${image.preview}"
       data-source="${image.original}"
       alt="${image.description}"
     />
-  </a>
 </li>
 `);
 }, "");
 
-const gallery = document.querySelector(".gallery");
 gallery.insertAdjacentHTML("beforeend", markup);
 
-console.log(markup);
+gallery.addEventListener("click", clickOnPicture);
+
+function clickOnPicture(event) {
+  const target = event.target;
+
+  if (target.nodeName !== "IMG") {
+    return event.target;
+  }
+
+  const dataSource = target.dataset.source;
+
+  const instance = basicLightbox.create(`
+      <img src="${dataSource}" width="1280">
+  `);
+  instance.show();
+}
